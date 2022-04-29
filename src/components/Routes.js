@@ -5,6 +5,7 @@ import AdminHome from './AdminHome';
 import Staff from './Staff';
 import AdminStudents from './AdminStudents';
 import AdminStaff from './AdminStaff';
+import CourseStudents from './CourseStudents';
 
 
 const Routes = () => {
@@ -16,6 +17,7 @@ const Routes = () => {
             <Route path='/admin/students' element={<AdminStudents/>}/>
             <Route path='/admin/staff' element={<AdminStaff/>}/>
             <Route path='/staff' element={<Staff/>}/> 
+            <Route path='/staff/students' element={<CourseStudents/>}/> 
         </RouterLink>
     </>
   )

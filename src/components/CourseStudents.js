@@ -4,15 +4,8 @@ import HeaderStaff from './HeaderStaff';
 import { Stack, Typography, Box } from '@mui/material';
 
 
-const Staff = () => {
-    const courses = [
-        { course: 'Data Science', path: '/staff/students' },
-        { course: 'Mathematics', path: '/staff/students' },
-        { course: 'Finance', path: '/staff/students' },
-        { course: 'Economics', path: '/staff/students' },
-        { course: 'History', path: '/staff/students' },
-        { course: 'Biology', path: '/staff/students' },
-      ];
+const CourseStudents = () => {
+    const students = ['Bob Marley', 'Bobi Bola', 'Gal Gadot', 'Chris Evans', 'Abang Ganteng', 'Eneng Geulis'];
 
 
   return (
@@ -22,17 +15,18 @@ const Staff = () => {
             sx={{ backgroundColor: '#cfe2f3', minWidth: '90%', minHeight: '90%', ml: '5%', mr: '5%', mt: '10px', padding: '5px'}}
         >
             <Typography>
-                Course Overview
+                Course Students
             </Typography>
             
             <Box sx={{ width: '100%' }}>
-                <Stack spacing={1}>
-                    {courses.map(({course, path}) => (
+                <Stack >
+                    {students.map((student) => (
                         <Paper 
                         sx={{ backgroundColor: '#99bdff'}}
+                        key={student}
                         >
                             <Typography>
-                                <a href={path} style={{textDecoration: "none", color: 'black'}}> {course}</a>
+                                {student}
                             </Typography>
                         </Paper>
                     ))}
@@ -44,4 +38,4 @@ const Staff = () => {
   )
 }
 
-export default Staff
+export default CourseStudents;
