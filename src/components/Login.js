@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -6,10 +7,22 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
 
 const theme =  createTheme();
 
+
 const Login = () => {
+    const [tries, setTries] = useState(0);
+    const adminPath = '/admin';
+    const staffPath = '/staff';
+
+    let navigate = useNavigate();
+    
+    const routeChange = (newPath) => {
+      let path = newPath;
+      navigate(path)
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -20,16 +33,21 @@ const Login = () => {
 
         if(username === 'admin' && password === 'admin'){
           console.log('admin');
+          routeChange(adminPath)
         } else if (username === 'staff' && password === 'staff'){
           console.log('staff');
+          routeChange(staffPath);
         } else {
+          var actualTries = tries + 1;
+          setTries(actualTries)
           console.log('wrong credentials');
         };
 
       };
-    
-      return (
-        <ThemeProvider theme={theme}>
+
+      const LoginPage = () =>{
+        return (
+          <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box
@@ -78,7 +96,17 @@ const Login = () => {
             </Box>
           </Container>
         </ThemeProvider>
-      );
+        );
+      }
+    
+      if(tries === 3){
+        return ('error invalid credentials entered more than 3 times');
+      } else {
+        return (
+          <LoginPage/>
+        );
+      }
+      
 }
 
-export default Login
+export default Login;
