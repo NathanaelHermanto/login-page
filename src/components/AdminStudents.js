@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Select, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -32,7 +32,7 @@ const AdminStudents = () => {
     const data = new FormData(event.currentTarget);
     const action = data.get('action');
     const newStudent = createStudent(data.get('id'), data.get('name'), data.get('dob'), data.get('gender'), data.get('department'), data.get('email'))
-
+    console.log(data.get('dob'))
     const addStudent = (std) => {
       const students = studentList.concat(std);
       setStudentList(students);
@@ -46,7 +46,7 @@ const AdminStudents = () => {
     const updateStudent = (std) => {
       var index = studentList.findIndex(x=> x.id === std.id);
       if (index === -1) {
-
+        addStudent(std)
       } else {
         let temporaryStudents = studentList.slice();
         temporaryStudents[index] = std;
@@ -137,6 +137,7 @@ const AdminStudents = () => {
           name="dob"
           label="dob"
           id="dob"
+          type="date"
         />
         <TextField
           margin="normal"
@@ -146,14 +147,22 @@ const AdminStudents = () => {
           label="gender"
           id="gender"
         />
-        <TextField
+
+        <Select
+          name="department"
+          id="department"
+          label="department"
           margin="normal"
           required
-          fullWidth
-          name="department"
-          label="department"
-          id="department"
-        />
+          sx={{ width: "100%"}}
+          >
+            <MenuItem value={"mathematics"}>Mathematics</MenuItem>
+            <MenuItem value={"multimedia"}>Multimedia</MenuItem>
+            <MenuItem value={"data science"}>Data Science</MenuItem>
+            <MenuItem value={"economics"}>Economics</MenuItem>
+            <MenuItem value={"finance"}>Finance</MenuItem>
+        </Select>
+
         <TextField
           margin="normal"
           required
@@ -163,14 +172,18 @@ const AdminStudents = () => {
           id="email"
         />
 
-        <TextField
+        <Select
+          name="action"
+          id="action"
+          label="action"
           margin="normal"
           required
-          fullWidth
-          name="action"
-          label="wished action(add/update/delete)"
-          id="action"
-        />
+          sx={{ width: "100%"}}
+          >
+            <MenuItem value={"add"}>Add</MenuItem>
+            <MenuItem value={"update"}>Update</MenuItem>
+            <MenuItem value={"delete"}>Delete</MenuItem>
+        </Select>
 
         <Button
           type="submit"
