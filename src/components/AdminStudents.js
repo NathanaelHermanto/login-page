@@ -24,9 +24,17 @@ const AdminStudents = () => {
 
   const [gender, setGender] = useState('');
   const [, setDateError] = useState('');
+  const [filter, setFilter] = useState('');
+  const [filteredData, setFilteredData] = useState(studentList);
 
-  const handleGenderChange = (ev) => {
-    setGender(ev.target.value);
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+  }
+
+  const handleFilterChange = (e) => {
+    e.preventDefault();
+    setFilter(e.target.value);
+    console.log(e.target.value);
   }
 
   const validateDob = (dob) => {
@@ -52,6 +60,13 @@ const AdminStudents = () => {
   function createStudent(id, name, dob, gender, department, email, joinDate){
     return { id, name, dob, gender, department, email, joinDate };
   };
+
+  const handleClickFilter = () => {
+    if (filter) {
+      console.log(filter)
+      setFilteredData(studentList.filter(x => x.department === filter));
+    }
+  }
 
   const handleSubmit =  async (event) => {
     event.preventDefault();
@@ -106,6 +121,40 @@ const AdminStudents = () => {
       <Typography sx={{margin: '5px'}}>
         All Students
       </Typography>
+
+      <Typography sx={{margin: '5px'}}>
+        Filter
+      </Typography>
+
+      
+      <Select
+        name="filter"
+        id="filter"
+        label="filter"
+        margin="normal"
+        required
+        onChange={handleFilterChange}
+        >
+          <MenuItem value={"mathematics"}>Mathematics</MenuItem>
+          <MenuItem value={"multimedia"}>Multimedia</MenuItem>
+          <MenuItem value={"data science"}>Data Science</MenuItem>
+          <MenuItem value={"economics"}>Economics</MenuItem>
+          <MenuItem value={"finance"}>Finance</MenuItem>
+      </Select>
+      
+      
+
+      <Button
+        onClick={handleClickFilter}
+      >
+        Apply filter
+      </Button>
+      <Button
+        onClick={()=>setFilteredData(studentList)}
+      >
+        reset
+      </Button>
+
       <TableContainer component={Paper}>
         <Table stickyHeader sx={{ minWidth: 650 }} aria-label="sticky table">
           <TableHead>
@@ -113,13 +162,14 @@ const AdminStudents = () => {
               <TableCell>id</TableCell>
               <TableCell align="right">Name</TableCell>
               <TableCell align="right">DOB</TableCell>
+              <TableCell align="right">Joining Date</TableCell>
               <TableCell align="right">Gender</TableCell>
               <TableCell align="right">Department</TableCell>
               <TableCell align="right">E-Mail</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {studentList.map((student) => (
+            {filteredData.map((student) => (
               <TableRow
                 key={student.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -129,6 +179,7 @@ const AdminStudents = () => {
                 </TableCell>
                 <TableCell align="right">{student.name}</TableCell>
                 <TableCell align="right">{student.dob}</TableCell>
+                <TableCell align="right">{student.joinDate}</TableCell>
                 <TableCell align="right">{student.gender}</TableCell>
                 <TableCell align="right">{student.department}</TableCell>
                 <TableCell align="right">{student.email}</TableCell>
