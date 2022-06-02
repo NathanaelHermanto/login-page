@@ -63,7 +63,6 @@ const AdminStudents = () => {
 
   const handleClickFilter = () => {
     if (filter) {
-      console.log(filter)
       setFilteredData(studentList.filter(x => x.department === filter));
     }
   }
