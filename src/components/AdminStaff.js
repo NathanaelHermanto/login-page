@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormLabel } from '@mui/material';
 import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -22,6 +22,12 @@ const AdminStaff = () => {
     createStaff(6, 'Hilo Olih', '03.03.1977', 'female', 'multimedia', 'hilo@gmail.com'),
   ]);
 
+  const [gender, setGender] = useState('');
+
+  const handleGenderChange = (ev) => {
+    setGender(ev.target.value);
+  }
+
 
   function createStaff(id, name, dob, gender, department, email){
     return { id, name, dob, gender, department, email };
@@ -31,7 +37,7 @@ const AdminStaff = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const action = data.get('action');
-    const newStaff = createStaff(data.get('id'), data.get('name'), data.get('dob'), data.get('gender'), data.get('department'), data.get('email'))
+    const newStaff = createStaff(data.get('id'), data.get('name'), data.get('dob'), gender, data.get('department'), data.get('email'))
 
     const addStaff = (stf) => {
       const staff = staffList.concat(stf);
@@ -135,25 +141,37 @@ const AdminStaff = () => {
           required
           fullWidth
           name="dob"
-          label="dob"
           id="dob"
+          type="date"
         />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          name="gender"
-          label="gender"
-          id="gender"
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
+        <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+        <RadioGroup
+          aria-labelledby="demo-radio-buttons-group-label"
+          name="radio-buttons-group"
+          row
+          onChange={handleGenderChange}
+          value={gender}
+        >
+          <FormControlLabel value="female" control={<Radio />} label="Female" />
+          <FormControlLabel value="male" control={<Radio />} label="Male" />
+          <FormControlLabel value="other" control={<Radio />} label="Other" />
+        </RadioGroup>
+
+        <FormLabel id="demo-radio-buttons-group-label">Department</FormLabel>
+        <Select
           name="department"
-          label="department"
           id="department"
-        />
+          label="department"
+          margin="normal"
+          required
+          sx={{ width: "100%"}}
+          >
+            <MenuItem value={"mathematics"}>Mathematics</MenuItem>
+            <MenuItem value={"multimedia"}>Multimedia</MenuItem>
+            <MenuItem value={"data science"}>Data Science</MenuItem>
+            <MenuItem value={"economics"}>Economics</MenuItem>
+            <MenuItem value={"finance"}>Finance</MenuItem>
+        </Select>
         <TextField
           margin="normal"
           required
@@ -163,14 +181,19 @@ const AdminStaff = () => {
           id="email"
         />
 
-        <TextField
+        <FormLabel id="demo-radio-buttons-group-label">Action</FormLabel>
+        <Select
+          name="action"
+          id="action"
+          label="action"
           margin="normal"
           required
-          fullWidth
-          name="action"
-          label="wished action(add/update/delete)"
-          id="action"
-        />
+          sx={{ width: "100%"}}
+          >
+            <MenuItem value={"add"}>Add</MenuItem>
+            <MenuItem value={"update"}>Update</MenuItem>
+            <MenuItem value={"delete"}>Delete</MenuItem>
+        </Select>
 
         <Button
           type="submit"

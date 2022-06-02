@@ -1,4 +1,4 @@
-import { Paper, Typography, Select, MenuItem } from '@mui/material';
+import { Paper, Typography, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormLabel } from '@mui/material';
 import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,25 +14,53 @@ import Header from './Header';
 
 const AdminStudents = () => {
   const [studentList, setStudentList] = useState([
-    createStudent(1, 'Bob Marley', '12.12.2000', 'male', 'multimedia', 'bob@gmail.com'),
-    createStudent(2, 'Bobi Bola', '12.02.2000', 'male', 'data science', 'bobi@gmail.com'),
-    createStudent(3, 'Gal Gadot', '02.12.2000', 'female', 'finance', 'gal@gmail.com'),
-    createStudent(4, 'Chris Evans', '22.02.2000', 'male', 'economics', 'chris@gmail.com'),
-    createStudent(5, 'Abang Ganteng', '01.04.2002', 'male', 'mathematics', 'abang@gmail.com'),
-    createStudent(6, 'Eneng Geulis', '03.03.2001', 'female', 'multimedia', 'eneng@gmail.com'),
+    createStudent(1, 'Bob Marley', '12.12.2000', 'male', 'multimedia', 'bob@gmail.com', '2015-01-01'),
+    createStudent(2, 'Bobi Bola', '12.02.2000', 'male', 'data science', 'bobi@gmail.com', '2015-01-01'),
+    createStudent(3, 'Gal Gadot', '02.12.2000', 'female', 'finance', 'gal@gmail.com', '2015-01-01'),
+    createStudent(4, 'Chris Evans', '22.02.2000', 'male', 'economics', 'chris@gmail.com', '2015-01-01'),
+    createStudent(5, 'Abang Ganteng', '01.04.2002', 'male', 'mathematics', 'abang@gmail.com', '2015-01-01'),
+    createStudent(6, 'Eneng Geulis', '03.03.2001', 'female', 'multimedia', 'eneng@gmail.com', ),
   ]);
 
+  const [gender, setGender] = useState('');
+  const [, setDateError] = useState('');
 
-  function createStudent(id, name, dob, gender, department, email){
-    return { id, name, dob, gender, department, email };
+  const handleGenderChange = (ev) => {
+    setGender(ev.target.value);
+  }
+
+  const validateDob = (dob) => {
+    const date = new Date(dob);
+    const min = new Date('1960-01-01');
+    const max = new Date('2003-01-01');
+    if(date > max || date < min){
+      setDateError('error dob');
+      return 'error dob'
+    } else return;
+  }
+
+  const validateJoiningDate= (d) => {
+    const date = new Date(d);
+    const min = new Date('2015-01-01');
+    const max = new Date('2022-05-01');
+    if(date > max || date < min){
+      setDateError('error joining date');
+      return 'error dob'
+    } else return;
+  }
+
+  function createStudent(id, name, dob, gender, department, email, joinDate){
+    return { id, name, dob, gender, department, email, joinDate };
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit =  async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const action = data.get('action');
-    const newStudent = createStudent(data.get('id'), data.get('name'), data.get('dob'), data.get('gender'), data.get('department'), data.get('email'))
-    console.log(data.get('dob'))
+    const dob = data.get('dob');
+    const joinDate = data.get('join-date')
+    
+    const newStudent = createStudent(data.get('id'), data.get('name'), dob, gender, data.get('department'), data.get('email'))
     const addStudent = (std) => {
       const students = studentList.concat(std);
       setStudentList(students);
@@ -53,6 +81,11 @@ const AdminStudents = () => {
         setStudentList(temporaryStudents);
       }
     }
+
+    var error = await validateDob(dob);
+    if(error) return;
+    error = await validateJoiningDate(joinDate);
+    if(error) return;
 
     if(action === 'add'){
       addStudent(newStudent);
@@ -130,24 +163,43 @@ const AdminStudents = () => {
           label="name"
           id="name"
         />
+
+        <FormLabel id="demo-radio-buttons-group-label">Date of birth</FormLabel>
         <TextField
           margin="normal"
           required
           fullWidth
           name="dob"
-          label="dob"
           id="dob"
           type="date"
+          InputProps={{inputProps: { min: new Date("1960-01-01"), max: new Date("2003-01-01")} }}
         />
+
+        <FormLabel id="demo-radio-buttons-group-label">Joining date</FormLabel>
         <TextField
           margin="normal"
           required
           fullWidth
-          name="gender"
-          label="gender"
-          id="gender"
+          name="join-date"
+          id="join-date"
+          type="date"
+          InputProps={{inputProps: { min: "2015-01-01", max: "2022-05-01"} }}
         />
+        
+        <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+        <RadioGroup
+          aria-labelledby="demo-radio-buttons-group-label"
+          name="radio-buttons-group"
+          row
+          onChange={handleGenderChange}
+          value={gender}
+        >
+          <FormControlLabel value="female" control={<Radio />} label="Female" />
+          <FormControlLabel value="male" control={<Radio />} label="Male" />
+          <FormControlLabel value="other" control={<Radio />} label="Other" />
+        </RadioGroup>
 
+        <FormLabel >Department</FormLabel>
         <Select
           name="department"
           id="department"
@@ -172,6 +224,7 @@ const AdminStudents = () => {
           id="email"
         />
 
+        <FormLabel >Action</FormLabel>
         <Select
           name="action"
           id="action"
