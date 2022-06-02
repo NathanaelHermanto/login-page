@@ -14,17 +14,18 @@ import Header from './Header';
 
 const AdminStudents = () => {
   const [studentList, setStudentList] = useState([
-    createStudent(1, 'Bob Marley', '12.12.2000', 'male', 'multimedia', 'bob@gmail.com', '2015-01-01'),
-    createStudent(2, 'Bobi Bola', '12.02.2000', 'male', 'data science', 'bobi@gmail.com', '2015-01-01'),
-    createStudent(3, 'Gal Gadot', '02.12.2000', 'female', 'finance', 'gal@gmail.com', '2015-01-01'),
-    createStudent(4, 'Chris Evans', '22.02.2000', 'male', 'economics', 'chris@gmail.com', '2015-01-01'),
-    createStudent(5, 'Abang Ganteng', '01.04.2002', 'male', 'mathematics', 'abang@gmail.com', '2015-01-01'),
-    createStudent(6, 'Eneng Geulis', '03.03.2001', 'female', 'multimedia', 'eneng@gmail.com', '2015-01-01'),
+    createStudent(1, 'Bob Marley', '12.12.2000', 'male', 'multimedia', 'bob@gmail.com', '2015-01-01', 'winter'),
+    createStudent(2, 'Bobi Bola', '12.02.2000', 'male', 'data science', 'bobi@gmail.com', '2015-01-01', 'winter'),
+    createStudent(3, 'Gal Gadot', '02.12.2000', 'female', 'finance', 'gal@gmail.com', '2015-01-01', 'winter'),
+    createStudent(4, 'Chris Evans', '22.02.2000', 'male', 'economics', 'chris@gmail.com', '2015-01-01', 'winter'),
+    createStudent(5, 'Abang Ganteng', '01.04.2002', 'male', 'mathematics', 'abang@gmail.com', '2015-01-01', 'winter'),
+    createStudent(6, 'Eneng Geulis', '03.03.2001', 'female', 'multimedia', 'eneng@gmail.com', '2015-01-01', 'winter'),
   ]);
 
   const [gender, setGender] = useState('');
   const [, setDateError] = useState('');
   const [filter, setFilter] = useState('');
+  const [semFilter, setSemFilter] = useState('');
   const [filteredData, setFilteredData] = useState(studentList);
 
   const handleGenderChange = (e) => {
@@ -34,7 +35,11 @@ const AdminStudents = () => {
   const handleFilterChange = (e) => {
     e.preventDefault();
     setFilter(e.target.value);
-    console.log(e.target.value);
+  }
+
+  const handleSemFilterChange = (e) => {
+    e.preventDefault();
+    setSemFilter(e.target.value);
   }
 
   const validateDob = (dob) => {
@@ -57,13 +62,29 @@ const AdminStudents = () => {
     } else return;
   }
 
-  function createStudent(id, name, dob, gender, department, email, joinDate){
-    return { id, name, dob, gender, department, email, joinDate };
+  function createStudent(id, name, dob, gender, department, email, joinDate, semester){
+    return { id, name, dob, gender, department, email, joinDate, semester };
   };
 
+  const isWinter = (month) => {
+    return month>10 || month < 3;
+  }
+
+  const getMonth = (joinDate) => {
+    const date = joinDate.split('-');
+    return date[1];
+  }
+
   const handleClickFilter = () => {
-    if (filter) {
-      setFilteredData(studentList.filter(x => x.department === filter));
+    if (filter !== '' && semFilter !== '') {
+      const filtered = studentList.filter(x => x.department === filter).filter(x => x.semester === semFilter);
+      setFilteredData(filtered);
+    } else if (filter === '' && semFilter !== '') {
+      const filtered = studentList.filter(x => x.semester === semFilter);
+      setFilteredData(filtered);
+    } else if (filter !== '' && semFilter === ''){
+      const filtered = studentList.filter(x => x.department === filter);
+      setFilteredData(filtered);
     }
   }
 
@@ -72,9 +93,12 @@ const AdminStudents = () => {
     const data = new FormData(event.currentTarget);
     const action = data.get('action');
     const dob = data.get('dob');
-    const joinDate = data.get('join-date')
+    const joinDate = data.get('join-date');
+
+    const month = getMonth(joinDate);
+    const semester = isWinter(month)? 'winter' : 'summer';
     
-    const newStudent = createStudent(data.get('id'), data.get('name'), dob, gender, data.get('department'), data.get('email'))
+    const newStudent = createStudent(data.get('id'), data.get('name'), dob, gender, data.get('department'), data.get('email'), joinDate , semester)
     const addStudent = (std) => {
       const students = studentList.concat(std);
       setStudentList(students);
@@ -141,6 +165,18 @@ const AdminStudents = () => {
           <MenuItem value={"finance"}>Finance</MenuItem>
       </Select>
       
+      <Select
+        name="filter"
+        id="filter"
+        label="filter"
+        margin="normal"
+        required
+        onChange={handleSemFilterChange}
+        >
+          <MenuItem value={"winter"}>winter</MenuItem>
+          <MenuItem value={"summer"}>summer</MenuItem>
+          
+      </Select>
       
 
       <Button
