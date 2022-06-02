@@ -19,7 +19,7 @@ const AdminStudents = () => {
     createStudent(3, 'Gal Gadot', '02.12.2000', 'female', 'finance', 'gal@gmail.com', '2015-01-01'),
     createStudent(4, 'Chris Evans', '22.02.2000', 'male', 'economics', 'chris@gmail.com', '2015-01-01'),
     createStudent(5, 'Abang Ganteng', '01.04.2002', 'male', 'mathematics', 'abang@gmail.com', '2015-01-01'),
-    createStudent(6, 'Eneng Geulis', '03.03.2001', 'female', 'multimedia', 'eneng@gmail.com', ),
+    createStudent(6, 'Eneng Geulis', '03.03.2001', 'female', 'multimedia', 'eneng@gmail.com', '2015-01-01'),
   ]);
 
   const [gender, setGender] = useState('');
