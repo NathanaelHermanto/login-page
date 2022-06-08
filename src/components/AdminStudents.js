@@ -172,6 +172,7 @@ const AdminStudents = () => {
         margin="normal"
         required
         onChange={handleSemFilterChange}
+        sx={{m: 1}}
         >
           <MenuItem value={"winter"}>winter</MenuItem>
           <MenuItem value={"summer"}>summer</MenuItem>
